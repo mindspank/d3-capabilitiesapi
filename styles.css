@@ -30,6 +30,9 @@ html, body
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/*
+ * The main grid setup.
+ */
 .container {
     width: 100%;
     height: 100%;
@@ -39,14 +42,36 @@ html, body
     align-items: stretch;
     align-content: stretch;
 }
+.wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+}
+.sidepanel {
+    flex: 0 0 300px;
+    max-width: 300px;
+    min-height: 100%;
+    background-color: #262626;
+    padding: 0 0 0 20px;
+    color: #88898c;
+}
+.main {
+    flex: 1;
+    background-color: #121314;
+}
 
+/*
+ * Header
+ */
 header {
     padding: 15px;
     height: 60px;
     background-color: #262626;
     border-bottom: 1px solid #000;
 }
-
 header button {
     float: right;
     height: 30px;
@@ -61,34 +86,15 @@ header h2 {
     color: #fff;
 }
 
-.wrapper {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start; /* align items in Main Axis */
-    align-items: stretch; /* align items in Cross Axis */
-    align-content: stretch; /* Extra space in Cross Axis */
-}
-
-.sidepanel {
-    flex: 0 0 300px;
-    max-width: 300px;
-    min-height: 100%;
-    background-color: #262626;
-    padding: 0 0 0 20px;
-    color: #88898c;
-}
-
+/*
+ * Sidepanel & Filters
+ */
 .sidepanel h3 {
     font-size: 16px;
     text-transform: uppercase;
     font-weight: lighter;
     margin: 0;
     margin-top: 40px;
-}
-.main {
-    flex: 1;
-    background-color: #121314;
 }
 .filter {
     max-height: 300px;
@@ -109,6 +115,10 @@ header h2 {
 .S.listitem {
     color: #648f00;
 }
+
+/*
+ * Bar Chart
+ */
 #chart1 {
     height: 350px;
     width: 100%;
