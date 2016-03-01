@@ -110,11 +110,15 @@ header h2 {
     color: #648f00;
 }
 #chart1 {
-    min-height: 400px;
+    height: 350px;
     width: 100%;
-    padding: 20px;
+    padding: 0 20px;
 }
-
+#chart1 p {
+    color: #88898c;
+    font-size: 24px;
+    margin: 10px 0 0 0;
+}
 svg text {
     fill: #88898c;
 }

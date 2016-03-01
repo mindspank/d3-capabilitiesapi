@@ -111,9 +111,9 @@ require(['js/qlik', 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/
     */
     
     // Chart Dimensions
-    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    var margin = {top: 10, right: 20, bottom: 30, left: 40},
     width = $('#chart1').width() - margin.left - margin.right,
-    height = $('#chart1').height() - margin.top - margin.bottom;
+    height = ($('#chart1').height() - 20) - margin.top - margin.bottom;
     
     // Scales
     var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
@@ -127,6 +127,9 @@ require(['js/qlik', 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient('left');
+    
+    // Chart Title
+    var title = d3.select('#chart1').append('p');
     
     // Our chart canvas
     var svg = d3.select('#chart1').append('svg')
@@ -177,13 +180,13 @@ require(['js/qlik', 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/
             var _this = this;
             var data = this.layout.qHyperCube;
             var dataPages = data.qDataPages[0].qMatrix;
-            console.log(dataPages)
             
             // Map over data, return the textual value of the first column (i.e our dimension).
             x.domain(dataPages.map(function(d) { return d[0].qText; }));
             // Qlik Sense gives you min and max values for calculations.
             y.domain([0, data.qMeasureInfo[0].qMax]);
-
+            
+            title.text(data.qGrandTotalRow[0].qText + ' brewers in ' + dataPages.length + ' ' + data.qDimensionInfo[0].qFallbackTitle + 's')
                 
             svg.select(".yaxis")
                 .transition()
