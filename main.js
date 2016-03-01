@@ -98,6 +98,7 @@ require(['js/qlik', 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/
    };
    
    // Fetch some data for fields. This will trigger the initial rendering of filters.
+   // Maximum number of cells per page is 10k, use getMoreData() to fetch additional data.
    state.getData();
    brewery.getData({rows: 10000});
    
@@ -155,7 +156,8 @@ require(['js/qlik', 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/
      * that will allow users to drill their way into the heirarchical data.
      * We sort the dimensional values based on the expression, in this case the number of unique breweries.
      * We also define a initial page of data to be fetched together with the first layout. 
-     * For this demo we will never have to page data.
+     * This examples uses the bare minimum or properties for the HyperCube, please refer to the documentation
+     * for additional settings and configuration options.
      * 
      * http://help.qlik.com/en-US/sense-developer/2.1/Subsystems/EngineAPI/Content/GenericObject/PropertyLevel/HyperCubeDef.htm
      */
@@ -234,6 +236,10 @@ require(['js/qlik', 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/
             
         })
     })
+    
+    /**
+     * End of Bar Chart Scenario.
+     */
  
  
 });
