@@ -74,6 +74,7 @@ require(['js/qlik', 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/
    state.OnData.bind(renderfilter);
    brewery.OnData.bind(renderfilter);
    
+   // Our filter render function
    function renderfilter() {
       
       var that = this;
@@ -137,11 +138,17 @@ require(['js/qlik', 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/
         .attr('height', height + margin.top + margin.bottom)
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-        
+    
+    // Append X and Y axis to chart canvas
     svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+      
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+
     
     /**
      * Create the Qlik Sense HyperCube construct. In this scenario we create a nested drill group
@@ -173,33 +180,38 @@ require(['js/qlik', 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/
             qWidth : 2
         }]
     }).then(function(model) {
+        
+        // We now have access to the model.
+        // Optionally createCube() takes a callback function that will be called everytime the data updates.
+        // In this example we instead opt to bind a function to the Validated event. We leave it up to you, it's just a personal preference.
+        
         // We listen for the Validated event, i.e new data.
         model.Validated.bind(function() {
+            
             // We now have access to the initial data page and the model of the object.
             // Bound to 'this' keyword.
             var _this = this;
             var data = this.layout.qHyperCube;
             var dataPages = data.qDataPages[0].qMatrix;
-            
+
             // Map over data, return the textual value of the first column (i.e our dimension).
             x.domain(dataPages.map(function(d) { return d[0].qText; }));
+            
             // Qlik Sense gives you min and max values for calculations.
             y.domain([0, data.qMeasureInfo[0].qMax]);
             
+            // We update the title
             title.text(data.qGrandTotalRow[0].qText + ' brewers in ' + dataPages.length + ' ' + data.qDimensionInfo[0].qFallbackTitle + 's')
-                
-            svg.select(".yaxis")
-                .transition()
-                .duration(1500)
-                .ease("sin-in-out") 
-                .call(yAxis);  
-
+            
+            // We join the data to the DOM. Passing in a optional key function, assuming names are unique in this example.
             var bar = svg.selectAll('.bar').data(dataPages, function(d) {
                 return d[0].qText
             });
             
+            // D3 Exit selections - Remove bar.
             bar.exit().remove();
             
+            // D3 Enter selections - Add bars and transition.
             bar.enter().append('rect')
                 .attr('class', 'bar')
                 .attr('id', function(d) { return d[0].qElemNumber; })
@@ -208,14 +220,17 @@ require(['js/qlik', 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/
                 .attr('y', height)
                 .attr('height', 0)
                 .on('click', function(d) {
+                    // On click, select the data point in Qlik Sense. This will automatically drill the dimension to next level.
                     return _this.selectHyperCubeValues('/qHyperCubeDef', 0, [d[0].qElemNumber], true);
                 })
                 .transition()
                 .duration(750)
                 .attr('y', function(d) { return y(d[1].qNum); })
                 .attr('height', function(d) { return height - y(d[1].qNum); });
-                
+            
+            // Transition axies.
             d3.transition(svg).select(".x.axis").call(xAxis);
+            d3.transition(svg).select(".y.axis").call(yAxis);
             
         })
     })
